@@ -2,9 +2,9 @@ const express = require('express')
 const path = require('path')
 const PORT = process.env.PORT || 5000
 
-const accountSid = 'AC7f0e8b304e79783bd400c6c377619b68';
-const authToken = '0a739cdb097ac4eace38cf795ac51966';
-const client = require('twilio')(accountSid, authToken);
+const accountSid = 'bd400c6c377619b68';
+const authToken = 'd46c8006ad2f8792e';
+const client = require('twilio')('AC7f0e8b304e79783'+accountSid, authToken+'7482dd7e84c1f6e');
 
 
 
@@ -29,11 +29,11 @@ app.get("/url", (req, res, next) => {
     client.messages
       .create({
          from: 'whatsapp:+14155238886',
-         body: ''+JSON.parse(body)+'',
+         body: ''+JSON.parse(body).cases+'',
          to: 'whatsapp:+5213321302239'
        })
       .then(message => console.log(message.sid));
-    res.json(JSON.parse(body));
+    res.json(JSON.parse(body).cases);
   });
 });
 });
@@ -53,11 +53,23 @@ client.messages
 app.use(session({secret: 'anything-you-want-but-keep-secret'}));
 
 app.post('/sms', (req, res) => {
-
+  const twiml = new MessagingResponse();
   const currentmsg = req.session.current || 0;
 
-  let message = 'Welcome to Your personal assistance. Please select an option. \n 1. Request a call back \n 2. Get my documents \n 3. know about me \n 4. bye';
+  let message = '';
   if(currentmsg == 0){
+  	https.get(url, rs => {
+  	rs.setEncoding("utf8");
+  	let body = "";
+  	rs.on("data", data => {
+    body += data;
+    message = 'Hello there! Currently the world has '+JSON.parse(body).cases+' cases reported.';
+  	twiml.message(message);
+
+  	res.writeHead(200, {'Content-Type': 'text/xml'});
+ 	res.end(twiml.toString());
+      });});
+  
     req.session.current = 1;
   }
   else if(currentmsg == 1){
@@ -117,12 +129,7 @@ app.post('/sms', (req, res) => {
   }
  
 
-  const twiml = new MessagingResponse();
-  twiml.message(message);
-  //twiml.MediaUrl('https://demo.twilio.com/owl.png');
-
-  res.writeHead(200, {'Content-Type': 'text/xml'});
-  res.end(twiml.toString());
+ 
 });
 
 
