@@ -63,7 +63,7 @@ app.post('/sms', (req, res) => {
   	let body = "";
   	rs.on("data", data => {
     body += data;
-    message = 'Hello there! Currently the world has '+JSON.parse(body).cases+' cases reported.\n';
+    message = 'Hello there! Currently the world has '+JSON.parse(body).cases+' COVID cases reported.\n';
     message = message + ' 1. World report \n 2. Country wise report \n 3. My country report \n 4. My profile'
   	twiml.message(message);
 
@@ -74,11 +74,29 @@ app.post('/sms', (req, res) => {
     req.session.current = 1;
   }
   else if(currentmsg == 1){
-  	message = 'You have selected '+req.body.Body+' option';
-  	twiml.message(message);
+  	
+ 	if(req.body.Body == 1){
+ 		https.get(url, rs => {
+  		rs.setEncoding("utf8");
+  		let body = "";
+  		rs.on("data", data => {
+    	body += data;
+    	{"cases":275997,"deaths":11402,"recovered":91952,"updated":1584760658957}
+    	message = 'Here is the World report\n';
+    	message = 'Total cases:'+JSON.parse(body).cases+' \n Total deaths:'+JSON.parse(body).deaths+'\n Total recovered:'+JSON.parse(body).recovered;
+  		twiml.message(message);
 
-  	res.writeHead(200, {'Content-Type': 'text/xml'});
- 	res.end(twiml.toString());
+  		res.writeHead(200, {'Content-Type': 'text/xml'});
+ 		res.end(twiml.toString());
+      });});
+ 	}
+ 	else{
+ 		message = 'You have selected '+req.body.Body+' option';
+  		twiml.message(message);
+
+  		res.writeHead(200, {'Content-Type': 'text/xml'});
+ 		res.end(twiml.toString());
+ 	}
     /*req.session.current = 0;
     if(req.body.Body == 1){
       message = 'Please select a window. \n 1. 10:00 - 11:00 \n 2. 11:00 - 12:00 \n 3. 14:00 - 15:00';
