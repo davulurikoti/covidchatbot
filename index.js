@@ -80,8 +80,8 @@ app.post('/sms', (req, res) => {
   		let body = "";
   		rs.on("data", data => {
     	body += data;
-    	message = 'Here is the World report\n';
-    	message = 'Total cases:'+JSON.parse(body).cases+' \n Total deaths:'+JSON.parse(body).deaths+'\n Total recovered:'+JSON.parse(body).recovered;
+    	message = 'Here is the World report.\n';
+    	message = message+'Total cases:'+JSON.parse(body).cases+' \n Total deaths:'+JSON.parse(body).deaths+'\n Total recovered:'+JSON.parse(body).recovered;
   		twiml.message(message);
 
   		res.writeHead(200, {'Content-Type': 'text/xml'});
@@ -89,7 +89,8 @@ app.post('/sms', (req, res) => {
       });});
  	}
  	else{
- 		message = 'You have selected '+req.body.Body+' option';
+ 		req.session.current = 0;
+ 		message = 'You have entered '+req.body.Body+'. I am working on this feature';
   		twiml.message(message);
 
   		res.writeHead(200, {'Content-Type': 'text/xml'});
