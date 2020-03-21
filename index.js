@@ -63,7 +63,8 @@ app.post('/sms', (req, res) => {
   	let body = "";
   	rs.on("data", data => {
     body += data;
-    message = 'Hello there! Currently the world has '+JSON.parse(body).cases+' cases reported.';
+    message = 'Hello there! Currently the world has '+JSON.parse(body).cases+' cases reported.\n';
+    message = message + ' 1. World report \n 2. Country wise report \n 3. My country report \n 4. My profile'
   	twiml.message(message);
 
   	res.writeHead(200, {'Content-Type': 'text/xml'});
@@ -73,7 +74,12 @@ app.post('/sms', (req, res) => {
     req.session.current = 1;
   }
   else if(currentmsg == 1){
-    req.session.current = 0;
+  	message = 'You have selected '+req.body.Body+' option';
+  	twiml.message(message);
+
+  	res.writeHead(200, {'Content-Type': 'text/xml'});
+ 	res.end(twiml.toString());
+    /*req.session.current = 0;
     if(req.body.Body == 1){
       message = 'Please select a window. \n 1. 10:00 - 11:00 \n 2. 11:00 - 12:00 \n 3. 14:00 - 15:00';
       req.session.current = 2;
@@ -91,7 +97,7 @@ app.post('/sms', (req, res) => {
     else{
       message = 'Wrong selection.Please select an option. \n 1. Request a call back \n 2. Get my documents \n 3. know about me \n 4. bye';
       req.session.current = 1;
-    }
+    }*/
     
   }
   else if(currentmsg == 2){
