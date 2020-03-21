@@ -1,0 +1,32 @@
+{
+  "name": "covidchatbot",
+  "version": "1.0.0",
+  "description": "This bot is to get tracker, news and a lot on covid19",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davulurikoti/covidchatbot.git"
+  },
+  "keywords": [
+    "covid",
+    "chatbot",
+    "developement",
+    "tracker"
+  ],
+  "author": "Koti Rama Murthy Davuluri",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/davulurikoti/covidchatbot/issues"
+  },
+  "homepage": "https://github.com/davulurikoti/covidchatbot#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "twilio": "^3.41.1",
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
