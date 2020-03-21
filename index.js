@@ -80,7 +80,6 @@ app.post('/sms', (req, res) => {
   		let body = "";
   		rs.on("data", data => {
     	body += data;
-    	{"cases":275997,"deaths":11402,"recovered":91952,"updated":1584760658957}
     	message = 'Here is the World report\n';
     	message = 'Total cases:'+JSON.parse(body).cases+' \n Total deaths:'+JSON.parse(body).deaths+'\n Total recovered:'+JSON.parse(body).recovered;
   		twiml.message(message);
