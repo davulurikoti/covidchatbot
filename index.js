@@ -2,9 +2,8 @@ const express = require('express')
 const path = require('path')
 const PORT = process.env.PORT || 5000
 
-const accountSid = 'bd400c6c377619b68';
-const authToken = 'd46c8006ad2f8792e';
-const client = require('twilio')('AC7f0e8b304e79783'+accountSid, authToken+'7482dd7e84c1f6e');
+
+const client = require('twilio')(process.env.SID, process.env.AUTH);
 
 
 
