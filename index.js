@@ -85,7 +85,7 @@ app.post('/sms', (req, res) => {
       });});
  	}
  	else if(req.body.Body == 2){
- 		twiml.message(req.from);
+ 		twiml.message(req.body.From);
 
   		res.writeHead(200, {'Content-Type': 'text/xml'});
  		res.end(twiml.toString());
