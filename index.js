@@ -159,10 +159,28 @@ app.post('/sms', (req, res) => {
     }
   }
   else if(currentmsg == 10){
-  	axios.get('https://corona.lmao.ninja/countries/'+req.body.Body)
+  	if(req.body.Body == 0){
+  		https.get(worldurl, rs => {
+  	rs.setEncoding("utf8");
+  	let body = "";
+  	rs.on("data", data => {
+    body += data;
+    message = 'Hello there! Currently the world has '+JSON.parse(body).cases+' COVID cases reported.\n';
+    message = message + mainMenu;
+  	twiml.message(message);
+
+  	res.writeHead(200, {'Content-Type': 'text/xml'});
+ 	res.end(twiml.toString());
+      });});
+  
+    req.session.current = 1;
+  	}
+  	else{
+  		axios.get('https://corona.lmao.ninja/countries/'+req.body.Body)
   	.then(response => {
     
     	message = response.data.country+'\n -------------------\n Cases:'+response.data.cases+'\n Today cases:'+response.data.todayCases+'\n Deaths:'+response.data.deaths+'\n Today deaths:'+response.data.todayDeaths+'\n Recovered: '+response.data.recovered+'\n Active:'+response.data.active+'\n Critical:'+response.data.critical+'\n Cases per million:'+response.data.casesPerOneMillion;
+    	message = message+'\n You can enter another country \n 0 to go to main menu'
     	twiml.message(message);
 
   		res.writeHead(200, {'Content-Type': 'text/xml'});
@@ -176,6 +194,8 @@ app.post('/sms', (req, res) => {
  		res.end(twiml.toString());
     console.log(error);
   });
+  	}
+  	
   }
  
 
