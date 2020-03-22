@@ -71,6 +71,7 @@ app.post('/sms', (req, res) => {
   else if(currentmsg == 1){
   	
  	if(req.body.Body == 1){
+ 		req.session.current = 1;
  		https.get(worldurl, rs => {
   		rs.setEncoding("utf8");
   		let body = "";
@@ -85,7 +86,8 @@ app.post('/sms', (req, res) => {
       });});
  	}
  	else if(req.body.Body == 2){
- 		twiml.message(req.body.From);
+ 		req.session.current = 1;
+ 		twiml.message("This feature is under development. Coming soon...\n Select from main menu again. \n"+mainMenu);
 
   		res.writeHead(200, {'Content-Type': 'text/xml'});
  		res.end(twiml.toString());
@@ -106,6 +108,7 @@ app.post('/sms', (req, res) => {
     			let curr = '**'+response.data[i].country+'\n Cases:'+response.data[i].cases+'\n today cases:'+response.data[i].todayCases+'\n deaths:'+response.data[i].deaths+'\n today deaths'+response.data[i].todayDeaths+'\n';
     			message = message + curr;
     		}
+    		message = message+'\n-----------\n 0 to go to main menu'
     		twiml.message(message);
 
   		res.writeHead(200, {'Content-Type': 'text/xml'});
@@ -116,50 +119,28 @@ app.post('/sms', (req, res) => {
   		});
  	}
  	else if(req.body.Body == 5){
- 		
+ 		req.session.current = 1;
+ 		twiml.message("This feature is under development. Coming soon...\n Select from main menu again. \n"+mainMenu);
+
+  		res.writeHead(200, {'Content-Type': 'text/xml'});
+ 		res.end(twiml.toString());
+ 	}
+ 	else if(req.body.Body == 6){
+ 		req.session.current = 1;
+ 		twiml.message("This feature is under development. Coming soon...\n Select from main menu again. \n"+mainMenu);
+
+  		res.writeHead(200, {'Content-Type': 'text/xml'});
+ 		res.end(twiml.toString());
  	}
  	else{
- 		req.session.current = 0;
- 		message = 'You have entered '+req.body.Body+'. I am working on this feature';
+ 		req.session.current = 1;
+ 		message = errorMessage+'\n'+mainMenu;
   		twiml.message(message);
 
   		res.writeHead(200, {'Content-Type': 'text/xml'});
  		res.end(twiml.toString());
  	}
     
-  }
-  else if(currentmsg == 2){
-    let docRef = db.collection("appointments").doc((req.body.From).split(":")[1]);
-    req.session.current = 0;
-    if(req.body.Body == 1){
-      message = 'Your appointment is confirmed at 10:15. We will call you back. Have a nice day';
-    }
-    if(req.body.Body == 2){
-      message = 'Your appointment is confirmed at 11:15. We will call you back. Have a nice day';
-    }
-    if(req.body.Body == 3){
-      message = 'Your appointment is confirmed at 14:30. We will call you back. Have a nice day';
-    }
-     docRef.set({
-          message: message,
-          date: today,
-          fulfilled: false
-      });
-  }
-  else if(currentmsg == 3){
-    req.session.current = 0;
-    if(req.body.Body == 1){
-      message = 'Here is your statement';
-    }
-    if(req.body.Body == 2){
-      message = 'Here is your insurance document';
-    }
-    if(req.body.Body == 3){
-      message = 'Here is your Home loan document';
-    }
-    if(req.body.Body == 4){
-      message = 'Bye. Have a nice day!';
-    }
   }
   else if(currentmsg == 10){
   	if(req.body.Body == 0){
