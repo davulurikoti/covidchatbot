@@ -114,8 +114,6 @@ app.post('/sms', (req, res) => {
   	res.writeHead(200, {'Content-Type': 'text/xml'});
  	res.end(twiml.toString());
       });});
-  
-    req.session.current = 1;
   	}
   	else{
   		axios.get(countryurl)
@@ -146,7 +144,7 @@ app.post('/sms', (req, res) => {
  	}
  	else if(req.body.Body == 6){
  		req.session.current = 1;
- 		twiml.message("You can ping me 'https://wa.me/918220432496'for any queries.\n Select from main menu again. \n"+mainMenu);
+ 		twiml.message("You can ping me 'https://wa.me/918220432496' for any queries.\n Select from main menu again. \n"+mainMenu);
 
   		res.writeHead(200, {'Content-Type': 'text/xml'});
  		res.end(twiml.toString());
