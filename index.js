@@ -118,7 +118,7 @@ app.post('/sms', (req, res) => {
   		.catch(error => {
     	console.log(error);
   		});
- 
+ 	}
   	else if(req.body.Body == 0){
   		https.get(worldurl, rs => {
   	rs.setEncoding("utf8");
@@ -134,7 +134,6 @@ app.post('/sms', (req, res) => {
       });});
   	}
  		
- 	}
  	else if(req.body.Body == 5){
  		req.session.current = 1;
  		twiml.message("This feature is under development. Coming soon...\n Select from main menu again. \n"+mainMenu);
