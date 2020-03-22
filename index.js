@@ -1,6 +1,7 @@
 const express = require('express')
 const path = require('path')
 const PORT = process.env.PORT || 5000
+const axios = require('axios');
 
 
 const client = require('twilio')(process.env.SID, process.env.AUTH);
@@ -12,7 +13,13 @@ const http = require('http');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const url = "https://corona.lmao.ninja/all";
+
+const worldurl = "https://corona.lmao.ninja/all";
+const countryurl = "https://corona.lmao.ninja/countries";
+
+let mainMenu = '1. World report \n 2. My country report \n 3. Country wise report \n 4. All countries report \n 5. Corona \n 6. About and Help';
+let coronaMenu = '1. What is Coronavirus and what are its symptoms? \n 2. How does Coronavirus spread? \n 3. How to reduce the risk of Coronavirus? \n 4. Professional Advice By AIIMS-Director \n 5. Know more on Coronavirus';
+let errorMessage = 'Sorry!! I did\'n\'t understand';
 
 var app = express();
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -20,7 +27,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 app.get("/url", (req, res, next) => {
-	https.get(url, rs => {
+	https.get(worldurl, rs => {
   rs.setEncoding("utf8");
   let body = "";
   rs.on("data", data => {
@@ -38,17 +45,6 @@ app.get("/url", (req, res, next) => {
 });
 
 
-app.get("/", function(req, res) {
-client.messages
-      .create({
-         from: 'whatsapp:+14155238886',
-         body: 'Hello from koti! \n Your verification code is',
-         to: 'whatsapp:+5213321302239'
-       })
-      .then(message => console.log(message.sid));
-	res.end();
-});
-
 app.use(session({secret: 'anything-you-want-but-keep-secret'}));
 
 app.post('/sms', (req, res) => {
@@ -57,13 +53,13 @@ app.post('/sms', (req, res) => {
 
   let message = '';
   if(currentmsg == 0){
-  	https.get(url, rs => {
+  	https.get(worldurl, rs => {
   	rs.setEncoding("utf8");
   	let body = "";
   	rs.on("data", data => {
     body += data;
     message = 'Hello there! Currently the world has '+JSON.parse(body).cases+' COVID cases reported.\n';
-    message = message + ' 1. World report \n 2. Country wise report \n 3. My country report \n 4. My profile'
+    message = message + mainMenu;
   	twiml.message(message);
 
   	res.writeHead(200, {'Content-Type': 'text/xml'});
@@ -88,6 +84,32 @@ app.post('/sms', (req, res) => {
  		res.end(twiml.toString());
       });});
  	}
+ 	else if(req.body.Body == 2){
+
+ 	}
+ 	else if(req.body.Body == 3){
+ 		
+ 	}
+ 	else if(req.body.Body == 4){
+ 		axios.get(countryurl)
+  			.then(response => {
+    
+    		for (var i = 0; i < response.data.length; i++) {
+    			let curr = response.data[i].country+'\n -------------------\n Cases:'+response.data[i].cases+'\n today cases:'+response.data[i].todayCases+'\n deaths:'+response.data[i].deaths+'\n today deaths'+response.data[i].todayDeaths+'\n';
+    			message = message + curr;
+    		}
+    		twiml.message(message);
+
+  		res.writeHead(200, {'Content-Type': 'text/xml'});
+ 		res.end(twiml.toString());
+  		})
+  		.catch(error => {
+    	console.log(error);
+  		});
+ 	}
+ 	else if(req.body.Body == 5){
+ 		
+ 	}
  	else{
  		req.session.current = 0;
  		message = 'You have entered '+req.body.Body+'. I am working on this feature';
@@ -96,25 +118,6 @@ app.post('/sms', (req, res) => {
   		res.writeHead(200, {'Content-Type': 'text/xml'});
  		res.end(twiml.toString());
  	}
-    /*req.session.current = 0;
-    if(req.body.Body == 1){
-      message = 'Please select a window. \n 1. 10:00 - 11:00 \n 2. 11:00 - 12:00 \n 3. 14:00 - 15:00';
-      req.session.current = 2;
-    }
-    else if(req.body.Body == 2){
-      message = 'We currently support following documents. \n 1. Current month statement \n 2. Current year insurance \n 3. Home Loan document \n 4. bye';
-      req.session.current = 3;
-    }
-    else if(req.body.Body == 3){
-      message = 'I am your banking assistance. I can help you with sending documents, scheduling the call, etc.';
-    }
-    else if(req.body.Body == 4){
-      message = 'Bye. Have a nice day!';
-    }
-    else{
-      message = 'Wrong selection.Please select an option. \n 1. Request a call back \n 2. Get my documents \n 3. know about me \n 4. bye';
-      req.session.current = 1;
-    }*/
     
   }
   else if(currentmsg == 2){
