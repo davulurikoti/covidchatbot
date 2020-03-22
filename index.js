@@ -94,7 +94,7 @@ app.post('/sms', (req, res) => {
  		axios.get(countryurl)
   			.then(response => {
     
-    		for (var i = 0; i < response.data.length; i++) {
+    		for (var i = 0; i < 5; i++) {
     			let curr = response.data[i].country+'\n -------------------\n Cases:'+response.data[i].cases+'\n today cases:'+response.data[i].todayCases+'\n deaths:'+response.data[i].deaths+'\n today deaths'+response.data[i].todayDeaths+'\n';
     			message = message + curr;
     		}
