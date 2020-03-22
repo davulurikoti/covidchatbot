@@ -100,7 +100,7 @@ app.post('/sms', (req, res) => {
   			.then(response => {
     
     		for (var i = 0; i < 5; i++) {
-    			let curr = '\n -------------------\n'+response.data[i].country+'\n -------------------\n Cases:'+response.data[i].cases+'\n today cases:'+response.data[i].todayCases+'\n deaths:'+response.data[i].deaths+'\n today deaths'+response.data[i].todayDeaths+'\n';
+    			let curr = '**'+response.data[i].country+'\n Cases:'+response.data[i].cases+'\n today cases:'+response.data[i].todayCases+'\n deaths:'+response.data[i].deaths+'\n today deaths'+response.data[i].todayDeaths+'\n';
     			message = message + curr;
     		}
     		twiml.message(message);
@@ -180,7 +180,7 @@ app.post('/sms', (req, res) => {
   	.then(response => {
     
     	message = response.data.country+'\n -------------------\n Cases:'+response.data.cases+'\n Today cases:'+response.data.todayCases+'\n Deaths:'+response.data.deaths+'\n Today deaths:'+response.data.todayDeaths+'\n Recovered: '+response.data.recovered+'\n Active:'+response.data.active+'\n Critical:'+response.data.critical+'\n Cases per million:'+response.data.casesPerOneMillion;
-    	message = message+'\n You can enter another country \n 0 to go to main menu'
+    	message = message+'\n-----------\n You can enter another country \n-----------\n 0 to go to main menu'
     	twiml.message(message);
 
   		res.writeHead(200, {'Content-Type': 'text/xml'});
