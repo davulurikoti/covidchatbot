@@ -71,7 +71,7 @@ app.post('/sms', (req, res) => {
   else if(currentmsg == 1){
   	
  	if(req.body.Body == 1){
- 		https.get(url, rs => {
+ 		https.get(worldurl, rs => {
   		rs.setEncoding("utf8");
   		let body = "";
   		rs.on("data", data => {
