@@ -101,21 +101,7 @@ app.post('/sms', (req, res) => {
  		res.end(twiml.toString());
  	}
  	else if(req.body.Body == 4){
- 		if(req.body.Body == 0){
-  		https.get(worldurl, rs => {
-  	rs.setEncoding("utf8");
-  	let body = "";
-  	rs.on("data", data => {
-    body += data;
-    message = 'Hello there! Currently the world has '+JSON.parse(body).cases+' COVID cases reported.\n';
-    message = message + mainMenu;
-  	twiml.message(message);
-
-  	res.writeHead(200, {'Content-Type': 'text/xml'});
- 	res.end(twiml.toString());
-      });});
-  	}
-  	else{
+ 		
   		axios.get(countryurl)
   			.then(response => {
     
@@ -132,6 +118,20 @@ app.post('/sms', (req, res) => {
   		.catch(error => {
     	console.log(error);
   		});
+ 
+  	else if(req.body.Body == 0){
+  		https.get(worldurl, rs => {
+  	rs.setEncoding("utf8");
+  	let body = "";
+  	rs.on("data", data => {
+    body += data;
+    message = 'Hello there! Currently the world has '+JSON.parse(body).cases+' COVID cases reported.\n';
+    message = message + mainMenu;
+  	twiml.message(message);
+
+  	res.writeHead(200, {'Content-Type': 'text/xml'});
+ 	res.end(twiml.toString());
+      });});
   	}
  		
  	}
