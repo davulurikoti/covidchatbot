@@ -17,7 +17,7 @@ const session = require('express-session');
 const worldurl = "https://corona.lmao.ninja/all";
 const countryurl = "https://corona.lmao.ninja/countries";
 
-let mainMenu = '1. World report \n 2. My country report \n 3. Country wise report \n 4. All countries report \n 5. Corona \n 6. About and Help';
+let mainMenu = '1. World report \n 2. My country report \n 3. Country wise report \n 4. Top 5 countries report \n 5. Corona \n 6. About and Help';
 let coronaMenu = '1. What is Coronavirus and what are its symptoms? \n 2. How does Coronavirus spread? \n 3. How to reduce the risk of Coronavirus? \n 4. Professional Advice By AIIMS-Director \n 5. Know more on Coronavirus';
 let errorMessage = 'Sorry!! I did\'n\'t understand';
 
@@ -88,14 +88,19 @@ app.post('/sms', (req, res) => {
 
  	}
  	else if(req.body.Body == 3){
- 		
+ 		req.session.current = 10;
+ 		message = 'Please enter the country name';
+ 		twiml.message(message);
+
+  		res.writeHead(200, {'Content-Type': 'text/xml'});
+ 		res.end(twiml.toString());
  	}
  	else if(req.body.Body == 4){
  		axios.get(countryurl)
   			.then(response => {
     
     		for (var i = 0; i < 5; i++) {
-    			let curr = response.data[i].country+'\n -------------------\n Cases:'+response.data[i].cases+'\n today cases:'+response.data[i].todayCases+'\n deaths:'+response.data[i].deaths+'\n today deaths'+response.data[i].todayDeaths+'\n';
+    			let curr = '\n -------------------\n'+response.data[i].country+'\n -------------------\n Cases:'+response.data[i].cases+'\n today cases:'+response.data[i].todayCases+'\n deaths:'+response.data[i].deaths+'\n today deaths'+response.data[i].todayDeaths+'\n';
     			message = message + curr;
     		}
     		twiml.message(message);
@@ -152,6 +157,25 @@ app.post('/sms', (req, res) => {
     if(req.body.Body == 4){
       message = 'Bye. Have a nice day!';
     }
+  }
+  else if(currentmsg == 10){
+  	axios.get('https://corona.lmao.ninja/countries/'+req.body.Body)
+  	.then(response => {
+    
+    	message = response.data.country+'\n -------------------\n Cases:'+response.data.cases+'\n Today cases:'+response.data.todayCases+'\n Deaths:'+response.data.deaths+'\n Today deaths:'+response.data.todayDeaths+'\n Recovered: '+response.data.recovered+'\n Active:'+response.data.active+'\n Critical:'+response.data.critical+'\n Cases per million:'+response.data.casesPerOneMillion;
+    	twiml.message(message);
+
+  		res.writeHead(200, {'Content-Type': 'text/xml'});
+ 		res.end(twiml.toString());	
+   
+  })
+  .catch(error => {
+  	twiml.message("Invalid country name");
+
+  		res.writeHead(200, {'Content-Type': 'text/xml'});
+ 		res.end(twiml.toString());
+    console.log(error);
+  });
   }
  
 
