@@ -101,7 +101,24 @@ app.post('/sms', (req, res) => {
  		res.end(twiml.toString());
  	}
  	else if(req.body.Body == 4){
- 		axios.get(countryurl)
+ 		if(req.body.Body == 0){
+  		https.get(worldurl, rs => {
+  	rs.setEncoding("utf8");
+  	let body = "";
+  	rs.on("data", data => {
+    body += data;
+    message = 'Hello there! Currently the world has '+JSON.parse(body).cases+' COVID cases reported.\n';
+    message = message + mainMenu;
+  	twiml.message(message);
+
+  	res.writeHead(200, {'Content-Type': 'text/xml'});
+ 	res.end(twiml.toString());
+      });});
+  
+    req.session.current = 1;
+  	}
+  	else{
+  		axios.get(countryurl)
   			.then(response => {
     
     		for (var i = 0; i < 5; i++) {
@@ -117,6 +134,8 @@ app.post('/sms', (req, res) => {
   		.catch(error => {
     	console.log(error);
   		});
+  	}
+ 		
  	}
  	else if(req.body.Body == 5){
  		req.session.current = 1;
@@ -127,7 +146,7 @@ app.post('/sms', (req, res) => {
  	}
  	else if(req.body.Body == 6){
  		req.session.current = 1;
- 		twiml.message("This feature is under development. Coming soon...\n Select from main menu again. \n"+mainMenu);
+ 		twiml.message("You can ping me 'https://wa.me/918220432496'for any queries.\n Select from main menu again. \n"+mainMenu);
 
   		res.writeHead(200, {'Content-Type': 'text/xml'});
  		res.end(twiml.toString());
