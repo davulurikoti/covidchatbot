@@ -47,7 +47,7 @@ app.get("/url", (req, res, next) => {
 function getCity(num){
 	var id = num.split("+")[1];
 	var options = { method: 'GET',
-  	url: url: 'https://covid-8840.restdb.io/rest/members?q={"number":"'+id+'"}',
+  	url: 'https://covid-8840.restdb.io/rest/members?q={"number":"'+id+'"}',
   	headers: 
    	{ 'cache-control': 'no-cache',
     	 'x-apikey': '5febb36d47b1aa8004dc42c3fd6f20d0c5b5d' } };
