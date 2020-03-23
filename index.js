@@ -234,13 +234,13 @@ app.post('/sms', (req, res) => {
    { 'cache-control': 'no-cache',
      'x-apikey': '5febb36d47b1aa8004dc42c3fd6f20d0c5b5d',
      'content-type': 'application/json' },
-  body: { number: "'"+req.body.From.split("+")[1]+"'", country: req.body.Body },
+  body: { number: req.body.From.split("+")[1], country: req.body.Body },
   json: true };
 
 	request(options2, function (error, response, body) {
   	if (error) throw new Error(error);
 
-  		twiml.message("Your country is set. Please go to main menu and try.");
+  		twiml.message("Your country is set. 0 to go to main menu and try.");
 
   		res.writeHead(200, {'Content-Type': 'text/xml'});
  		res.end(twiml.toString());
