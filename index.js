@@ -97,24 +97,31 @@ app.post('/sms', (req, res) => {
 		request(options, function (error, response, body) {
   			if (error) throw new Error(error);
 
-  			axios.get('https://corona.lmao.ninja/countries/'+JSON.parse(body).country)
-  			.then(response => {
-    
-    		message = response.data.country+'\n -------------------\n Cases:'+response.data.cases+'\n Today cases:'+response.data.todayCases+'\n Deaths:'+response.data.deaths+'\n Today deaths:'+response.data.todayDeaths+'\n Recovered: '+response.data.recovered+'\n Active:'+response.data.active+'\n Critical:'+response.data.critical+'\n Cases per million:'+response.data.casesPerOneMillion;
-    		twiml.message(message);
+  			if(JSON.parse(body).length == 0){
+  				twiml.message("You haven't set your country. Please enter your country name here");
 
-  			res.writeHead(200, {'Content-Type': 'text/xml'});
- 			res.end(twiml.toString());
-  		})
-  		.catch(error => {
-   		 console.log(error);
-  		});
+  				res.writeHead(200, {'Content-Type': 'text/xml'});
+ 				res.end(twiml.toString());
+  			}
+  			else{
+  				axios.get('https://corona.lmao.ninja/countries/'+JSON.parse(body).country)
+  				.then(response => {
+    
+    			message = response.data.country+'\n -------------------\n Cases:'+response.data.cases+'\n Today cases:'+response.data.todayCases+'\n Deaths:'+response.data.deaths+'\n Today deaths:'+response.data.todayDeaths+'\n Recovered: '+response.data.recovered+'\n Active:'+response.data.active+'\n Critical:'+response.data.critical+'\n Cases per million:'+response.data.casesPerOneMillion;
+    			twiml.message(message);
+
+  				res.writeHead(200, {'Content-Type': 'text/xml'});
+ 				res.end(twiml.toString());
+  			})
+  			.catch(error => {
+   		 	console.log(error);
+  			});
+  			}
+
+  			
   	
 	});
-		twiml.message("You haven't set your country. Please enter your country name here");
-
-  			res.writeHead(200, {'Content-Type': 'text/xml'});
- 			res.end(twiml.toString());
+		
  		/*var city = getCity(req.body.FROM);
  		if(null != null){
  			axios.get('https://corona.lmao.ninja/countries/'+city)
