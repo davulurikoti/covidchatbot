@@ -79,7 +79,7 @@ app.post('/sms', (req, res) => {
     	body += data;
     	message = 'Here is the World report.\n';
     	
-    	message = message+ 'Total Cases:'+JSON.parse(body).cases+'\nToday cases:'+JSON.parse(body).todayCases+'\nDeaths:'+JSON.parse(body).deaths+'\nToday deaths:'+JSON.parse(body).todayDeaths+'\n';
+    	message = message+ 'Total Cases:'+JSON.parse(body).cases+'\nDeaths:'+JSON.parse(body).deaths+'\nRecovered:'+JSON.parse(body).recovered+'\n';
     	message = message +'\n-----------\n 0 to go to main menu';
   		twiml.message(message);
 
