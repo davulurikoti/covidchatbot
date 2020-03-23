@@ -17,8 +17,8 @@ const session = require('express-session');
 const worldurl = "https://corona.lmao.ninja/all";
 const countryurl = "https://corona.lmao.ninja/countries";
 
-let mainMenu = '1. World report \n 2. My country report \n 3. Country wise report \n 4. Top 5 countries report \n 5. Corona \n 6. About and Help';
-let coronaMenu = '1. What is Coronavirus and what are its symptoms? \n 2. How does Coronavirus spread? \n 3. How to reduce the risk of Coronavirus? \n 4. Professional Advice By AIIMS-Director \n 5. Know more on Coronavirus';
+let mainMenu = '1. World report \n2. My country report \n3. Country wise report \n4. Top 5 countries report \n5. About and Help';
+
 let errorMessage = 'Sorry!! I did\'n\'t understand';
 
 var app = express();
@@ -58,6 +58,7 @@ app.post('/sms', (req, res) => {
   	rs.on("data", data => {
     body += data;
     message = 'Hello there! Currently the world has '+JSON.parse(body).cases+' COVID cases reported.\n';
+	message = message + "\nPlease choose from the following options."   
     message = message + mainMenu;
   	twiml.message(message);
 
@@ -108,6 +109,7 @@ app.post('/sms', (req, res) => {
   				.then(response => {
     
     			message = response.data.country+'\n -------------------\n Cases:'+response.data.cases+'\n Today cases:'+response.data.todayCases+'\n Deaths:'+response.data.deaths+'\n Today deaths:'+response.data.todayDeaths+'\n Recovered: '+response.data.recovered+'\n Active:'+response.data.active+'\n Critical:'+response.data.critical+'\n Cases per million:'+response.data.casesPerOneMillion;
+    			message = message +'\n-----------\n 0 to go to main menu'
     			twiml.message(message);
 
   				res.writeHead(200, {'Content-Type': 'text/xml'});
@@ -135,7 +137,7 @@ app.post('/sms', (req, res) => {
   			.then(response => {
     
     		for (var i = 0; i < 5; i++) {
-    			let curr = '**'+response.data[i].country+'\n Cases:'+response.data[i].cases+'\n today cases:'+response.data[i].todayCases+'\n deaths:'+response.data[i].deaths+'\n today deaths'+response.data[i].todayDeaths+'\n';
+    			let curr = '**'+response.data[i].country+'\nCases:'+response.data[i].cases+'\nToday cases:'+response.data[i].todayCases+'\nDeaths:'+response.data[i].deaths+'\nToday deaths:'+response.data[i].todayDeaths+'\n';
     			message = message + curr;
     		}
     		message = message+'\n-----------\n 0 to go to main menu'
@@ -165,14 +167,7 @@ app.post('/sms', (req, res) => {
  		
  	else if(req.body.Body == 5){
  		req.session.current = 1;
- 		twiml.message("This feature is under development. Coming soon...\n Select from main menu again. \n"+mainMenu);
-
-  		res.writeHead(200, {'Content-Type': 'text/xml'});
- 		res.end(twiml.toString());
- 	}
- 	else if(req.body.Body == 6){
- 		req.session.current = 1;
- 		twiml.message("You can ping me 'https://wa.me/918220432496' for any queries.\n Select from main menu again. \n"+mainMenu);
+ 		twiml.message("This Bot is made to track the current corona cases.\n You can ping me 'https://wa.me/918220432496' for any queries.\n Select from main menu again. \n"+mainMenu);
 
   		res.writeHead(200, {'Content-Type': 'text/xml'});
  		res.end(twiml.toString());
@@ -240,7 +235,7 @@ app.post('/sms', (req, res) => {
 	request(options2, function (error, response, body) {
   	if (error) throw new Error(error);
 
-  		twiml.message("Your country is set. 0 to go to main menu and try.");
+  		twiml.message("Your country is set. \n 0 to go to main menu and try.");
 
   		res.writeHead(200, {'Content-Type': 'text/xml'});
  		res.end(twiml.toString());
