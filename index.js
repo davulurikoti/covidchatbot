@@ -85,7 +85,6 @@ app.post('/sms', (req, res) => {
       });});
  	}
  	else if(req.body.Body == 2){
- 		//check the country exists or not
  		req.session.current = 1;
  		var id = req.body.From.split("+")[1];
 		var options = { method: 'GET',
@@ -98,6 +97,7 @@ app.post('/sms', (req, res) => {
   			if (error) throw new Error(error);
 
   			if(JSON.parse(body).length == 0){
+  				req.session.current = 11;
   				twiml.message("You haven't set your country. Please enter your country name here");
 
   				res.writeHead(200, {'Content-Type': 'text/xml'});
@@ -116,45 +116,10 @@ app.post('/sms', (req, res) => {
   			.catch(error => {
    		 	console.log(error);
   			});
-  			}
-
-  			
+  			}		
   	
 	});
 		
- 		/*var city = getCity(req.body.FROM);
- 		if(null != null){
- 			axios.get('https://corona.lmao.ninja/countries/'+city)
-  			.then(response => {
-    
-    		message = response.data.country+'\n -------------------\n Cases:'+response.data.cases+'\n Today cases:'+response.data.todayCases+'\n Deaths:'+response.data.deaths+'\n Today deaths:'+response.data.todayDeaths+'\n Recovered: '+response.data.recovered+'\n Active:'+response.data.active+'\n Critical:'+response.data.critical+'\n Cases per million:'+response.data.casesPerOneMillion;
-    		message = message+'\n-----------\n You can enter another country \n-----------\n 0 to go to main menu'
-    		twiml.message(message);
-
-  			res.writeHead(200, {'Content-Type': 'text/xml'});
- 			res.end(twiml.toString());	
-   
-  		})
-  		.catch(error => {
-  			twiml.message("Invalid country name");
-
-  			res.writeHead(200, {'Content-Type': 'text/xml'});
- 			res.end(twiml.toString());
-    		console.log(error);
-  		});
- 		}
- 		else{
-			req.session.current = 11;
-			twiml.message("You haven't set your country. Please enter your country name here");
-
-  			res.writeHead(200, {'Content-Type': 'text/xml'});
- 			res.end(twiml.toString());
- 		}*/
- 		/*req.session.current = 1;
- 		twiml.message("This feature is under development. Coming soon...\n Select from main menu again. \n"+mainMenu);
-
-  		res.writeHead(200, {'Content-Type': 'text/xml'});
- 		res.end(twiml.toString());*/
  	}
  	else if(req.body.Body == 3){
  		req.session.current = 10;
@@ -261,7 +226,26 @@ app.post('/sms', (req, res) => {
   	}
   	
   }
- 
+ else if(currentmsg == 11){
+ 	req.session.current = 1;
+ 	var options2 = { method: 'POST',
+  url: 'https://covid-8840.restdb.io/rest/members',
+  headers: 
+   { 'cache-control': 'no-cache',
+     'x-apikey': '5febb36d47b1aa8004dc42c3fd6f20d0c5b5d',
+     'content-type': 'application/json' },
+  body: { number: "'"+req.body.From.split("+")[1]+"'", country: req.body.Body },
+  json: true };
+
+	request(options2, function (error, response, body) {
+  	if (error) throw new Error(error);
+
+  		twiml.message("Your country is set. Please go to main menu and try.");
+
+  		res.writeHead(200, {'Content-Type': 'text/xml'});
+ 		res.end(twiml.toString());
+});
+ }
 
  
 });
