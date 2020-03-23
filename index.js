@@ -103,8 +103,8 @@ app.post('/sms', (req, res) => {
  	}
  	else if(req.body.Body == 2){
  		//check the country exists or not
- 		var city = getCity(req.body.FROM);
- 		if(getCity(req.body.FROM) != null){
+ 		/*var city = getCity(req.body.FROM);
+ 		if(null != null){
  			axios.get('https://corona.lmao.ninja/countries/'+city)
   			.then(response => {
     
@@ -130,8 +130,8 @@ app.post('/sms', (req, res) => {
 
   			res.writeHead(200, {'Content-Type': 'text/xml'});
  			res.end(twiml.toString());
- 		}
- 		
+ 		}*/
+ 		req.session.current = 1;
  		twiml.message("This feature is under development. Coming soon...\n Select from main menu again. \n"+mainMenu);
 
   		res.writeHead(200, {'Content-Type': 'text/xml'});
