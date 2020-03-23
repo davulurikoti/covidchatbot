@@ -104,7 +104,7 @@ app.post('/sms', (req, res) => {
  				res.end(twiml.toString());
   			}
   			else{
-  				axios.get('https://corona.lmao.ninja/countries/'+JSON.parse(body).country)
+  				axios.get('https://corona.lmao.ninja/countries/'+JSON.parse(body)[0].country)
   				.then(response => {
     
     			message = response.data.country+'\n -------------------\n Cases:'+response.data.cases+'\n Today cases:'+response.data.todayCases+'\n Deaths:'+response.data.deaths+'\n Today deaths:'+response.data.todayDeaths+'\n Recovered: '+response.data.recovered+'\n Active:'+response.data.active+'\n Critical:'+response.data.critical+'\n Cases per million:'+response.data.casesPerOneMillion;
