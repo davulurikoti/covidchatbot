@@ -58,7 +58,7 @@ app.post('/sms', (req, res) => {
   	rs.on("data", data => {
     body += data;
     message = 'Hello there! Currently the world has '+JSON.parse(body).cases+' COVID cases reported.\n';
-	message = message + "\nPlease choose from the following options."   
+	message = message + "\nPlease choose from the following options.\n"   
     message = message + mainMenu;
   	twiml.message(message);
 
@@ -78,7 +78,9 @@ app.post('/sms', (req, res) => {
   		rs.on("data", data => {
     	body += data;
     	message = 'Here is the World report.\n';
-    	message = message+'Total cases:'+JSON.parse(body).cases+' \n Total deaths:'+JSON.parse(body).deaths+'\n Total recovered:'+JSON.parse(body).recovered;
+    	
+    	message = message+ 'Total Cases:'+JSON.parse(body).cases+'\nToday cases:'+JSON.parse(body).todayCases+'\nDeaths:'+JSON.parse(body).deaths+'\nToday deaths:'+JSON.parse(body).todayDeaths+'\n';
+    	message = message +'\n-----------\n 0 to go to main menu';
   		twiml.message(message);
 
   		res.writeHead(200, {'Content-Type': 'text/xml'});
@@ -109,7 +111,7 @@ app.post('/sms', (req, res) => {
   				.then(response => {
     
     			message = response.data.country+'\n -------------------\n Cases:'+response.data.cases+'\n Today cases:'+response.data.todayCases+'\n Deaths:'+response.data.deaths+'\n Today deaths:'+response.data.todayDeaths+'\n Recovered: '+response.data.recovered+'\n Active:'+response.data.active+'\n Critical:'+response.data.critical+'\n Cases per million:'+response.data.casesPerOneMillion;
-    			message = message +'\n-----------\n 0 to go to main menu'
+    			message = message +'\n-----------\n 0 to go to main menu';
     			twiml.message(message);
 
   				res.writeHead(200, {'Content-Type': 'text/xml'});
