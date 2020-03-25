@@ -247,4 +247,12 @@ app.post('/sms', (req, res) => {
  
 });
 
+app.post('/expire', (req, res) => {
+  const twiml = new MessagingResponse();
+  let message = '🙏🏼Thanks for your messages.\nDue to the excessive messages, this channel ran out of free credits.\n\nAlternatively, I have created new channel.\n\nYou can join *new channel* by just sending "*join event-rubber*" here or click on below link.\nhttps://api.whatsapp.com/send?phone=14155238886&text=join%20event-rubber \n\n*It has new updates*. Please check it.\n\nI am working on a permanent solution.\n✍🏼You can ping me at https://wa.me/918220432496, if you have any queries.';
+  twiml.message(message);
 
+  	res.writeHead(200, {'Content-Type': 'text/xml'});
+ 	res.end(twiml.toString());
+  
+});
