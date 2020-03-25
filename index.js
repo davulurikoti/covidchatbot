@@ -249,7 +249,7 @@ app.post('/sms', (req, res) => {
 
 app.post('/expire', (req, res) => {
   const twiml = new MessagingResponse();
-  let message = 'To adopt latest updates, send "Join event-rubber"';
+  let message = 'To adopt latest updates, send *Join event-rubber*.\nAlternatively, you can click here(https://api.whatsapp.com/send?phone=14155238886&text=join%20event-rubber). \nYou can ping me at whatsapp: +918220432496(https://wa.me/918220432496) for any queries.';
   twiml.message(message);
 
   	res.writeHead(200, {'Content-Type': 'text/xml'});
